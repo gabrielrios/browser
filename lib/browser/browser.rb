@@ -38,7 +38,8 @@ module Browser
   EMPTY_STRING = "".freeze
 
   def self.root
-    @root ||= Pathname.new(File.expand_path("../..", __dir__))
+    dir = File.dirname(File.realpath(__FILE__))
+    @root ||= Pathname.new(File.expand_path("../..", dir))
   end
 
   # Hold the list of browser matchers.
@@ -89,9 +90,9 @@ module Browser
     rules << ->(b) { b.firefox? && b.device.tablet? && b.platform.android? && b.version.to_i >= 14 } # rubocop:disable Metrics/LineLength
   end
 
-  def self.new(user_agent, **kwargs)
+  def self.new(user_agent, kwargs = {})
     matchers
-      .map {|klass| klass.new(user_agent || EMPTY_STRING, **kwargs) }
+      .map {|klass| klass.new(user_agent || EMPTY_STRING, kwargs) }
       .find(&:match?)
   end
 end

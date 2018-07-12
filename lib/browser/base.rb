@@ -9,8 +9,9 @@ module Browser
     # Return an array with all preferred languages that this browser accepts.
     attr_reader :accept_language
 
-    def initialize(ua, accept_language: nil)
+    def initialize(ua, args = {}) # accept_language: nil)
       @ua = ua
+      accept_language = args.fetch(:accept_language, nil)
       @accept_language = AcceptLanguage.parse(accept_language)
     end
 
